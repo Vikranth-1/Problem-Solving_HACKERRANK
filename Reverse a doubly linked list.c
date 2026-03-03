@@ -67,39 +67,26 @@ void free_doubly_linked_list(DoublyLinkedListNode* node) {
         free(temp);
     }
 }
-DoublyLinkedListNode* sortedInsert(DoublyLinkedListNode* head, int data) {
-
-    // Create node using provided helper
-    DoublyLinkedListNode* newNode = create_doubly_linked_list_node(data);
-
-    // Case 1: Empty list
-    if (head == NULL) {
-        return newNode;
-    }
-
-    // Case 2: Insert at beginning
-    if (data <= head->data) {
-        newNode->next = head;
-        head->prev = newNode;
-        return newNode;
-    }
+DoublyLinkedListNode* reverse(DoublyLinkedListNode* head) {
 
     DoublyLinkedListNode* current = head;
+    DoublyLinkedListNode* temp = NULL;
 
-    // Traverse to find correct position
-    while (current->next != NULL && current->next->data < data) {
-        current = current->next;
+    while (current != NULL) {
+
+        // Swap prev and next
+        temp = current->prev;
+        current->prev = current->next;
+        current->next = temp;
+
+        // Move to next node (which is previous before swap)
+        current = current->prev;
     }
 
-    // Insert after current
-    newNode->next = current->next;
-    newNode->prev = current;
-
-    if (current->next != NULL) {
-        current->next->prev = newNode;
+    // Fix head pointer
+    if (temp != NULL) {
+        head = temp->prev;
     }
-
-    current->next = newNode;
 
     return head;
 }
