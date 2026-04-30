@@ -21,27 +21,10 @@ char* morganAndString(char* a, char* b) {
     int i = 0, j = 0, k = 0;
     
     while (i < len_a && j < len_b) {
-        if (a[i] < b[j]) {
+        if (strcmp(a + i, b + j) <= 0) {
             result[k++] = a[i++];
-        } else if (a[i] > b[j]) {
-            result[k++] = b[j++];
         } else {
-            int x = i, y = j;
-            while (x < len_a && y < len_b && a[x] == b[y]) {
-                x++;
-                y++;
-            }
-            if (x < len_a && y < len_b) {
-                if (a[x] < b[y]) {
-                    result[k++] = a[i++];
-                } else {
-                    result[k++] = b[j++];
-                }
-            } else if (x < len_a) {
-                result[k++] = a[i++];
-            } else {
-                result[k++] = b[j++];
-            }
+            result[k++] = b[j++];
         }
     }
     
@@ -71,6 +54,8 @@ int main()
 
         fprintf(fptr, "%s\n", result);
         free(result);
+        free(a);
+        free(b);
     }
 
     fclose(fptr);
