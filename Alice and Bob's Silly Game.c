@@ -15,23 +15,31 @@ char* rtrim(char*);
 
 int parse_int(char*);
 
-int isPrime(int n) {
-    if (n < 2) return 0;
-    if (n == 2) return 1;
-    if (n % 2 == 0) return 0;
-    for (int i = 3; i * i <= n; i += 2) {
-        if (n % i == 0) return 0;
-    }
-    return 1;
-}
-
 char* sillyGame(int n) {
-    int prime_count = 0;
-    for (int i = 2; i <= n; i++) {
-        if (isPrime(i)) {
-            prime_count++;
+    static int cached_n = 0;
+    static int prime_count_cache[100001];
+    
+    if (n > cached_n) {
+        int is_prime[100001];
+        memset(is_prime, 1, sizeof(is_prime));
+        is_prime[0] = is_prime[1] = 0;
+        
+        for (int i = 2; i * i <= n; i++) {
+            if (is_prime[i]) {
+                for (int j = i * i; j <= n; j += i) {
+                    is_prime[j] = 0;
+                }
+            }
         }
+        
+        prime_count_cache[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            prime_count_cache[i] = prime_count_cache[i - 1] + is_prime[i];
+        }
+        cached_n = n;
     }
+    
+    int prime_count = prime_count_cache[n];
     
     if (prime_count % 2 == 0) {
         char* result = malloc(4 * sizeof(char));
